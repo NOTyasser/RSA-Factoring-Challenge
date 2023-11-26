@@ -1,33 +1,40 @@
-#!/usr/bin/python3
-"""Module that factorize as many numbers as possible
-into a product of two smaller numbers."""
-from sys import argv
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
 
+void factorize(int num) {
+        int i;
+        for (i = 2; i <= num / 2; ++i) {
+            if (num % i == 0) {
+                printf("%d=%d*%d\n", num, i, num / i);
+                return;
+                }
+            }
+        printf("%d=%d*%d\n", num, 1, num);
+        }
 
-def factorize(value):
-	""""print a simple descomposition of an integer > 1"""
-	     i = 2
+int main(int argc, char *argv[]) {
+        if (argc != 2) {
+            printf("Usage: %s <file>\n", argv[0]);
+            return 1;
+            }
 
-	     if value < 2:
-	return
-print()
-	print(value, "<- value-bef")
-	while value % i:
-	i += 1
-	print("{:.0f}={:.0f}*{:.0f}".format(value, value / i, i))
-	print(value, "<- value-aft")
-print()
+        FILE *file = fopen(argv[1], "r");
+        if (file == NULL) {
+            perror("Error opening the file");
+            return 1;
+            }
 
-	if len(argv) != 2:
-exit()
+        signal(SIGALRM, SIG_IGN); 
 
-	try:
-	with open(argv[1]) as file:
-line = file.readline()
+        alarm(5); 
 
-	while line != "":
-	value = int(line.split('\n')[0])
-	factorize(value)
-line = file.readline()
-	except:
-	pass
+        int num;
+        while (fscanf(file, "%d", &num) == 1) {
+            factorize(num);
+            }
+
+        fclose(file);
+        return 0;
+        }
